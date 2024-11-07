@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-const Login = () => {
+const Login = ({ setIsAuthentic }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,27 +14,28 @@ const Login = () => {
   };
 
   const loginData = {
-    email: "teste@teste.com",
-    password: "teste123",
+    email: "b2@teste.com",
+    password: "luiz124",
   };
+
+  //Usuario para testa
 
   const handleLogin = () => {
     event.preventDefault();
     axios
       .post("http://localhost:3000/api/login", loginData, {
         headers: {
-          "Content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        console.log(response);
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        setIsAuthentic(true);
       })
       .catch((error) => {
         console.log(error);
       });
-
-    // console.log(password, email);
   };
 
   return (

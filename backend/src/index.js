@@ -6,14 +6,17 @@ const cors = require("cors");
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET, POST, PUT",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
+
 // Middleware
 app.use(bodyParser.json());
 app.use("/api", routes);
-app.use(cors({ origin: "*" }));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-});
 
 // Iniciar o servidor
 app.listen(PORT, () => {
