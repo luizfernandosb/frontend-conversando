@@ -1,48 +1,46 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-const Login = ({ setIsAuthentic }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setIsAuthentic } = useAuth();
+  const navigate = useNavigate();
 
-  const handleEmail = () => {
-    setEmail(event.target.value);
-  };
+  const handleEmail = (event) => {
+    
+    setEmail(event.target.value)
+  }
+  const handlePassword = (event) => {
+     setPassword(event.target.value)
+  }
 
-  const handlePassword = () => {
-    setPassword(event.target.value);
-  };
-
-  const loginData = {
-    email: "b2@teste.com",
-    password: "luiz124",
-  };
-
-  //Usuario para testa
-
-  const handleLogin = () => {
+  const handleLogin = (event) => {
     event.preventDefault();
+
     axios
-      .post("http://localhost:3000/api/login", loginData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      .post("http://localhost:3000/api/login", { email: email, password:password }, {
+        headers: { "Content-Type": "application/json" },
       })
       .then((response) => {
         const token = response.data.token;
         localStorage.setItem("token", token);
         setIsAuthentic(true);
+        navigate("/chat");
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -51,12 +49,13 @@ const Login = ({ setIsAuthentic }) => {
               E-mail
             </label>
             <input
+              value={email}
               type="email"
               id="email"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="Digite seu e-mail"
-              onChange={() => handleEmail()}
+              onChange={(event) => handleEmail(event)}
             />
           </div>
           <div className="mb-6">
@@ -67,18 +66,19 @@ const Login = ({ setIsAuthentic }) => {
               Senha
             </label>
             <input
+              value={password}
               type="password"
               id="password"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="Digite sua senha"
-              onChange={() => handlePassword()}
+              onChange={(event) => handlePassword(event)}
             />
           </div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-            onClick={() => handleLogin()}
+            onClick={(event) => handleLogin(event)}
           >
             Entrar
           </button>
